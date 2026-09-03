@@ -13,6 +13,9 @@ const STATUS_LABEL: Record<string, string> = {
   CANNOT_BREAK_ON_VERCEL: 'CANNOT_BREAK_ON_VERCEL',
   CANNOT_BREAK_STATICALLY: 'CANNOT_BREAK_STATICALLY',
   CANNOT_BREAK_IN_NEXTJS: 'CANNOT_BREAK_IN_NEXTJS',
+  CANNOT_BREAK_WITHOUT_BLOCKING_CRAWL: 'CANNOT_BREAK_WITHOUT_BLOCKING_CRAWL',
+  CANNOT_BREAK_CRAWLER_ARCHITECTURE: 'CANNOT_BREAK_CRAWLER_ARCHITECTURE (not Vercel-specific)',
+  NEEDS_FIELD_DATA: 'NEEDS_FIELD_DATA (real browser/PSI measurement required)',
 };
 
 export default function RulesPage() {
@@ -20,6 +23,7 @@ export default function RulesPage() {
   const broken = RULE_STATUS.filter((r) => r.status === 'BROKEN').length;
   const notApplicable = RULE_STATUS.filter((r) => r.status === 'NOT_APPLICABLE').length;
   const platformBlocked = RULE_STATUS.filter((r) => r.status.startsWith('CANNOT_BREAK')).length;
+  const needsFieldData = RULE_STATUS.filter((r) => r.status === 'NEEDS_FIELD_DATA').length;
 
   return (
     <main style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1rem', fontFamily: 'system-ui, sans-serif' }}>
@@ -36,6 +40,7 @@ export default function RulesPage() {
         <li><strong>{broken}</strong> BROKEN — genuinely violates the rule&apos;s real evaluate() logic.</li>
         <li><strong>{notApplicable}</strong> NOT_APPLICABLE — the rule itself returns not-applicable for this content shape (verified from its source, not a fixture gap).</li>
         <li><strong>{platformBlocked}</strong> CANNOT_BREAK_ON_VERCEL / IN_NEXTJS / STATICALLY — platform, framework, or crawler-capability constraints prevent triggering a real failure without faking it.</li>
+        <li><strong>{needsFieldData}</strong> NEEDS_FIELD_DATA — the rule is permanently stubbed/disabled, or requires real browser-rendered/PSI measurement data no static crawler can produce; cannot be exercised on a fresh deploy without fabricating a signal.</li>
       </ul>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.85rem' }}>
@@ -57,7 +62,7 @@ export default function RulesPage() {
                 <td style={cellStyle}>{r.category}</td>
                 <td style={cellStyle}>{r.page}</td>
                 <td style={cellStyle}>{r.how}</td>
-                <td style={{ ...cellStyle, fontWeight: 600, color: r.status === 'BROKEN' ? '#16a34a' : r.status === 'NOT_APPLICABLE' ? '#6b7280' : '#dc2626' }}>
+                <td style={{ ...cellStyle, fontWeight: 600, color: r.status === 'BROKEN' ? '#16a34a' : r.status === 'NOT_APPLICABLE' ? '#6b7280' : r.status === 'NEEDS_FIELD_DATA' ? '#9333ea' : '#dc2626' }}>
                   {STATUS_LABEL[r.status] ?? r.status}
                 </td>
               </tr>

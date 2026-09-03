@@ -4,20 +4,25 @@ import type { Metadata } from "next";
 //
 // technical.canonical_tag / technical.canonical_self_reference / technical.canonical_conflicts /
 // technical.canonical_redirect_target: this page declares its canonical as
-// "/technical-markup/redirect-me", which is:
+// "/technical-markup/canonical-dead-end", which is:
 //   (a) present (so canonical_tag PASSes — not every canonical rule can fail at once without
 //       contradicting itself; see below for why conflicts/self-ref/redirect-target still fail),
 //   (b) NOT self (so canonical_self_reference WARNs — points elsewhere on purpose),
-//   (c) a target that Next 301/302-redirects (see next.config.ts /old-page pattern reused here
-//       via /technical-markup/redirect-me -> /category/technical) so
-//       canonical_redirect_target FAILs (target resolves to a redirect, not 200).
+//   (c) a target that returns a genuine terminal HTTP 404 (notFound()), so
+//       canonical_redirect_target FAILs (target resolves to a non-2xx status, not 200).
+//       NOTE: an earlier version of this fixture pointed the canonical at
+//       "/technical-markup/redirect-me" (a next.config.ts redirect target). That did NOT work:
+//       the crawler follows redirects internally (redirect: 'manual' + its own hop-following
+//       loop) and records the FINAL post-redirect httpStatus (200) against the ORIGINALLY
+//       REQUESTED url in ctx.allPages — so a canonical pointing at a redirecting URL silently
+//       read back as 200 and the rule could never fail. A real 404 has no such laundering.
 // technical.canonical_conflicts needs a DIFFERENT page (different title) declaring the SAME
 // canonical target as this page — see app/technical-markup/canonical-conflict-b/page.tsx, which
-// canonicalizes to this same "/technical-markup/redirect-me" URL with a distinct title.
+// canonicalizes to this same "/technical-markup/canonical-dead-end" URL with a distinct title.
 export const metadata: Metadata = {
   title: "Technical Markup Fixture | Broken Fixture Co",
   alternates: {
-    canonical: "/technical-markup/redirect-me",
+    canonical: "/technical-markup/canonical-dead-end",
   },
   // technical.meta_robots_validation: conflicting directives "index, noindex" together trips a
   // hard FAIL for meta_robots_validation. Note this is NOT the same as technical.noindex (which
@@ -103,6 +108,14 @@ export default function TechnicalMarkupPage() {
 
         <li>
           <a href="/technical-markup/canonical-conflict-b">Canonical conflict page</a>
+        </li>
+
+        {/* technical.canonical_redirect_target: must be independently crawled so
+            ctx.allPages.find(o => o.url === p.canonicalUrl) resolves to a real 404 record. */}
+        <li>
+          <a href="/technical-markup/canonical-dead-end">
+            Canonical dead-end (404 target)
+          </a>
         </li>
 
         {/* technical.external_links_secure: target="_blank" with no rel attribute at all, so

@@ -4,9 +4,10 @@ export const metadata: Metadata = {
   title: "Resources Hub | Broken Fixture Co",
 };
 
-// Receives inbound links from home and blog, making it an inbound-link outlier / hub candidate
-// on this small site, but it only links back out to one page — internal_linking.hub_page_detection
-// expects a real hub to also fan out to >=5 pages in its topic cluster.
+// Receives inbound links from home, blog, and product, making it an inbound-link outlier / hub
+// candidate on this small site, but it only links back out to two pages —
+// internal_linking.hub_page_detection expects a real hub to also fan out to >=5 pages in its
+// topic cluster (HUB_OUTBOUND_MIN).
 export default function HubPage() {
   return (
     <main style={{ maxWidth: 720, margin: "40px auto", padding: "0 20px" }}>
@@ -19,6 +20,11 @@ export default function HubPage() {
       <ul>
         <li>
           <a href="/blog">Blog</a>
+        </li>
+        {/* technical.faceted_navigation: entry point to the filter/sort facet-URL
+            demonstration — see /hub/listing. */}
+        <li>
+          <a href="/hub/listing">Resource Listing</a>
         </li>
       </ul>
     </main>

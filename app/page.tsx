@@ -54,9 +54,10 @@ export default function Home() {
           <li>
             <a href="/blog">Blog</a>
           </li>
-          <li>
-            <a href="/product">Product</a>
-          </li>
+          {/* internal_linking.important_pages_reachability / important_page_inlinks /
+              link_depth_distribution (SITE): /product is NOT linked here (or from /blog) on
+              purpose -- its only inbound link is 9 clicks deep via
+              /blog/page/1/deeper/d3.../d8, see /product's own notes. */}
           <li>
             <a href="/hub">Resources Hub</a>
           </li>
@@ -68,6 +69,14 @@ export default function Home() {
           </li>
           <li>
             <a href="/rules">Full rule list (/rules)</a>
+          </li>
+          {/* on_page.url_lowercase / on_page.url_hyphen_usage: dirty-URL demonstration routes,
+              linked here so they're actually crawled. */}
+          <li>
+            <a href="/Broken/Page">Broken Page (uppercase URL)</a>
+          </li>
+          <li>
+            <a href="/some_broken_page">Some Broken Page (underscore URL)</a>
           </li>
         </ul>
       </nav>

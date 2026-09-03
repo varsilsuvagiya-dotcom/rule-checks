@@ -3,6 +3,14 @@ import type { Metadata } from "next";
 // on_page.duplicate_title / on_page.duplicate_meta_description: this exact title and
 // description are also reused verbatim on
 // /on-page/Legacy_Section/thisisaveryveryverylongopaqueslugwithnowordbreaksatall.
+//
+// internal_linking.important_pages_reachability / important_page_inlinks /
+// link_depth_distribution (SITE): /product matches the site's key-page pattern (/products?/)
+// but is deliberately NOT linked from the homepage, /blog, or any shallow page -- its only
+// inbound link anywhere on the site is from /blog/page/1/deeper/d8, at the end of an 8-hop
+// burial chain (home -> /blog/page/1 -> deeper -> d3 -> d4 -> d5 -> d6 -> d7 -> d8 -> here),
+// giving it click-depth 9 (past MAX_KEY_PAGE_DEPTH=2) and exactly 1 inbound link (below
+// MIN_INLINKS_FOR_KEY_PAGE=2).
 export const metadata: Metadata = {
   title: "Product | Broken Fixture Co",
   description:

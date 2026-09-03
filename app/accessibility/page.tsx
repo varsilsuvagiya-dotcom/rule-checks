@@ -82,7 +82,12 @@ export default function AccessibilityFixturePage() {
       {/* accessibility.link_accessible_name: anchor containing only a decorative icon, no text,
           no aria-label/aria-labelledby, no title, no alt on a contained image
           -> linksMissingAccessibleName > 0. */}
-      <a href="/contact">
+      {/* NOTE: intentionally NOT "/contact" -- that path incidentally matched
+          eeat.contact_information's CONTACT_PATTERN (any internal link whose path matches
+          /\/contact([-/]|$)/i counts as "found", even if never crawled), causing that SITE-scope
+          rule to falsely PASS. Uses an unrelated dead path instead so this link-accessible-name
+          fixture doesn't leak a false contact-page signal. */}
+      <a href="/icon-link-no-name">
         <svg width="16" height="16" aria-hidden="true">
           <path d="M2 2 L14 14" />
         </svg>

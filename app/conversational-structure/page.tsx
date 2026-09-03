@@ -34,10 +34,13 @@ export default function ConversationalStructureFixturePage() {
         ensure/try/consider/avoid/etc.) -> questionScore + pronounScore +
         instructionalScore is far below the warn floor -> FAIL.
 
-        conversational_structure.how_to_structure: no STEP_PATTERN wording
-        (no "step 1", "first,", "how to", etc.) anywhere on the page -> NOT_APPLICABLE
-        (rule only applies to pages with instructional intent; this page deliberately
-        carries none, which is itself part of the violation surface).
+        conversational_structure.how_to_structure: the "How to Request Platform Access"
+        section below matches STEP_PATTERN ("how to" in its heading, "step 2"/"step 4" in
+        body text) -> hasStepWording = true, so the rule applies. It deliberately has NO
+        <ul>/<ol> anywhere on the page (hasList = false) AND skips step numbers (jumps from
+        step 2 to step 4, no step 1 or step 3 anywhere) -> WARNING ("step wording present but
+        no list structure"). Kept to a couple of short paragraphs so the added instructional
+        verbs ("submit", "review") stay well under dialogue_readability's FAIL threshold.
 
         conversational_structure.comparison_sections: page is >= minWords (300) but
         deliberately contains no COMPARISON_PATTERN wording (vs/versus/pros and cons/
@@ -107,6 +110,18 @@ export default function ConversationalStructureFixturePage() {
         during platform reconciliation are routed to the platform finance
         liaison for resolution under the platform dispute-handling procedure
         documented separately from the platform contract archive.
+      </p>
+
+      <h2>How to Request Platform Access</h2>
+      <p>
+        Platform access provisioning follows an internal procedure documented by the
+        platform engineering group. Step 2 of the procedure routes the request through the
+        platform governance board intake queue for review.
+      </p>
+      <p>
+        Step 4 of the procedure finalizes the platform access grant once the platform
+        governance board completes its review. No numbered list accompanies this
+        description anywhere on the page.
       </p>
 
       <h2>Deployment Standards</h2>

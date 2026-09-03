@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 // technical.canonical_conflicts: declares the SAME canonical target as
-// /technical-markup ("/technical-markup/redirect-me") while carrying a genuinely different
-// <title> — the exact "different content collapsed into one canonical" trigger the rule checks
-// for (two pages, same canonicalUrl, different p.title).
+// /technical-markup ("/technical-markup/canonical-dead-end") while carrying a genuinely
+// different <title> — the exact "different content collapsed into one canonical" trigger the
+// rule checks for (two pages, same canonicalUrl, different p.title).
 //
 // technical.url_structure: linked from /technical-markup as
 // "/Technical-Markup/Canonical-Conflict-B" (uppercase path) — Next's App Router is
@@ -14,7 +14,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Canonical Conflict B | Broken Fixture Co",
   alternates: {
-    canonical: "/technical-markup/redirect-me",
+    canonical: "/technical-markup/canonical-dead-end",
   },
 };
 
@@ -27,8 +27,8 @@ export default function CanonicalConflictBPage() {
       <h1>Canonical Conflict B</h1>
       <p>
         This page declares the same canonical target as /technical-markup
-        (&quot;/technical-markup/redirect-me&quot;) but has a different title, which is the
-        exact condition technical.canonical_conflicts flags.
+        (&quot;/technical-markup/canonical-dead-end&quot;) but has a different title, which is
+        the exact condition technical.canonical_conflicts flags.
       </p>
     </main>
   );
