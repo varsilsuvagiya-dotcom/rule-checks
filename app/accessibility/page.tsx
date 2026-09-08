@@ -58,8 +58,8 @@ export default function AccessibilityFixturePage() {
       <img src="/DSC00193.png" alt="Another generic camera filename example" />
       <img src="/Screenshot_2024.png" alt="Generic screenshot filename example" />
 
-      {/* accessibility.keyboard_navigation: FIXED -- real skip-to-content link present. */}
-      <a href="#main-content">Skip to content</a>
+      {/* accessibility.keyboard_navigation: FIXED site-wide in app/layout.tsx -- a real
+          skip-to-content link is the first focusable element in <body> on every page. */}
 
       {/* accessibility.lang_attribute: FIXED in app/layout.tsx (<html lang="en">), site-wide. */}
 
@@ -83,8 +83,6 @@ export default function AccessibilityFixturePage() {
         width={2400}
         height={1200}
       />
-
-      <div id="main-content" />
     </main>
   );
 }

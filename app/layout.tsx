@@ -43,6 +43,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           charset name outside {utf-8, utf8, iso-8859-1, windows-1252}; it never fails on a
           mismatch between the declared and actual encoding. See /rules for the full note. */}
       <body style={{ margin: 0, fontFamily: "sans-serif" }}>
+        {/* accessibility.keyboard_navigation: site-wide skip-to-content link, first
+            focusable element in <body>. Visually hidden until focused via CSS in
+            globals.css (.skip-nav-link) -- never display:none, which would also
+            remove it from the tab order. */}
+        <a href="#main-content" className="skip-nav-link">
+          Skip to content
+        </a>
         <div
           style={{
             background: "#b91c1c",
@@ -54,7 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           TEST FIXTURE — intentionally broken, not a real business.
         </div>
-        {children}
+        <div id="main-content">{children}</div>
       </body>
     </html>
   );
