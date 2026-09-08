@@ -1,45 +1,86 @@
 import type { Metadata } from "next";
+import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../components";
 
 export const metadata: Metadata = {
-  title: "Blog | Broken Fixture Co",
+  title: "Blog",
+  description:
+    "Read guides on technical SEO, accessibility, and site structure from the Broken Fixture Co team, drawn from real audits behind Fixture Scanner's rules.",
+  alternates: { canonical: `${SITE_URL}/blog` },
 };
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Blog", href: "/blog" },
+];
+
+const posts = [
+  {
+    slug: "structured-data-checklist",
+    title: "A structured data checklist that actually passes validation",
+    excerpt:
+      "Why most JSON-LD implementations fail silently, and a five-step checklist for shipping structured data that matches your page type and validates cleanly.",
+    date: "2026-02-02",
+  },
+  {
+    slug: "responsive-images-guide",
+    title: "How to make images responsive without breaking Core Web Vitals",
+    excerpt:
+      "A practical guide to srcset, sizes, and modern image formats — and the three mistakes that quietly hurt LCP the most.",
+    date: "2026-01-08",
+  },
+];
 
 export default function BlogPage() {
   return (
-    <main style={{ maxWidth: 720, margin: "40px auto", padding: "0 20px" }}>
-      <h1>Blog</h1>
-      <p>TEST FIXTURE — intentionally broken, not a real business.</p>
-      <p>Fixture blog index. No structured data on this page on purpose.</p>
-      {/* Heavily links to /hub, concentrating internal link equity on ONE page
-          (internal_linking.link_equity_distribution — high Gini coefficient). NOTE: this used
-          to link 3x to /product instead, but /product is now deliberately buried 9 clicks deep
-          with exactly 1 inbound link (see /product's notes) -- concentrating equity there too
-          would contradict important_page_inlinks/important_pages_reachability, so the
-          concentration target was moved to /hub, which is not a key-page-pattern URL. */}
+    <main className="container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(crumbs)) }}
+      />
+      <Breadcrumbs items={crumbs} />
+      <h1>Guides on technical SEO, accessibility, and site structure</h1>
+      <p>
+        Every article on this blog starts from a real finding in a real
+        audit — a rule that fired against an actual site, a fix that
+        actually worked, and enough detail that you could apply it to your
+        own pages this afternoon. We write about the same categories
+        Fixture Scanner checks: technical SEO, on-page signals, structured
+        data, accessibility, content depth, and how well a page holds up
+        for an AI crawler trying to extract an answer from it.
+      </p>
+      <p>
+        We keep the list short on purpose. Rather than publishing often for
+        its own sake, each author writes when they have something specific
+        worth explaining — usually after fixing the same issue for the
+        third or fourth client and realizing it deserved a proper writeup
+        instead of another one-off Slack message. That&rsquo;s also why
+        each post carries a named author with their own background: the
+        advice here comes from people who have actually done the work, not
+        an anonymous editorial voice.
+      </p>
+
+      <h2>Latest articles</h2>
       <ul>
-        <li>
-          <a href="/hub">Resources Hub</a>
-        </li>
-        <li>
-          <a href="/hub">Explore Our Resources</a>
-        </li>
-        <li>
-          <a href="/hub">Hub Deep Dive</a>
-        </li>
-        {/* technical.pagination_discoverability: links to page 1 of the paginated archive so it
-            gets crawled at all, but page 1 itself never links onward to page 2 (see
-            /blog/page/1 and /blog/page/2) — the series exists and is directly reachable by URL,
-            but is not discoverable via a "Next"/numbered pagination widget. */}
-        <li>
-          <a href="/blog/page/1">Older posts</a>
-        </li>
-        <li>
-          <a href="/blog/eeat">How We Cut Server Costs by 40%</a>
-        </li>
-        <li>
-          <a href="/blog/stale-content">Why We Chose Our Stack in 2022</a>
-        </li>
+        {posts.map((p) => (
+          <li key={p.slug} style={{ marginBottom: 16 }}>
+            <a href={`/blog/${p.slug}`}>
+              <h3 style={{ margin: 0 }}>{p.title}</h3>
+            </a>
+            <p style={{ margin: "4px 0" }}>{p.excerpt}</p>
+            <time dateTime={p.date} style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
+              {new Date(p.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+            </time>
+          </li>
+        ))}
       </ul>
+
+      <div className="callout">
+        <p>
+          Looking for external standards instead of our own writing? The{" "}
+          <a href="/hub">resource hub</a> links out to the W3C, MDN, and
+          Google Search Central documentation we reference most often.
+        </p>
+      </div>
     </main>
   );
 }

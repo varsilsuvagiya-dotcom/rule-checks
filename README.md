@@ -1,28 +1,30 @@
-# Broken Fixture Co — GeoRank AI QA Fixture
+# Broken Fixture Co
 
-A deliberately-broken Next.js site used to verify that a 249-rule SEO/GEO
-audit scanner actually detects violations instead of returning canned
-output. Every page shows: **"TEST FIXTURE — intentionally broken, not a
-real business."** Not a real site, no real people, no real claims.
+The marketing site for **Fixture Scanner**, a website-auditing tool. This
+repository previously served as a deliberately-broken QA fixture used to
+verify that the GeoRank AI audit scanner (249 rules: 179 SEO + 70 GEO)
+correctly detected real violations. It has since been fully rebuilt as a
+genuinely clean, compliant reference site — a rescan should show every rule
+passing except a small, honest set that cannot produce a verdict from a
+static crawl at all (see below).
 
-Ground truth checklist: **`/rules`** — all 249 rule IDs with page,
-mechanism, and verdict (`BROKEN`, `NOT_APPLICABLE`, a `CANNOT_BREAK_*`
-platform/framework constraint, or `NEEDS_FIELD_DATA`).
+Ground truth checklist: **`/rules`** — every one of the 249 rule IDs, its
+scope, the real page(s) it was checked against, and its verdict (`PASS`,
+`NOT_APPLICABLE`, or `NEEDS_FIELD_DATA`), grouped by category.
 
 ## Status breakdown (249 total)
 
 | Status | Count | Meaning |
 |---|---|---|
-| `BROKEN` | 155 | Genuinely violates the rule's real `evaluate()` logic. |
-| `NOT_APPLICABLE` | 68 | The rule itself returns not-applicable for this content shape, OR (12 accessibility rules) was deliberately fixed per user request — see below. |
-| `CANNOT_BREAK_ON_VERCEL` | 7 | Vercel/platform-edge behavior prevents triggering a real failure. Would need a self-hosted origin. |
-| `CANNOT_BREAK_IN_NEXTJS` | 3 | Next.js/React always emits the compliant output; no app-level override exists. |
-| `CANNOT_BREAK_CRAWLER_ARCHITECTURE` | 2 | Not hosting-specific — the scanner's own BFS crawl-discovery design makes the condition structurally unreachable, on any origin. |
-| `NEEDS_FIELD_DATA` | 14 | Rule is permanently stubbed/disabled in the codebase, or requires real browser-rendered/PageSpeed-Insights measurement data no static-HTML crawler can produce. |
+| `PASS` | 222 | The site genuinely satisfies the rule's real `evaluate()`/`check()` logic. |
+| `NOT_APPLICABLE` | 13 | A Vercel platform guarantee, a Next.js framework guarantee, or a structurally-unfireable crawler-architecture/opportunity-only rule makes the condition this rule checks for impossible to observe either way on a real, fully-linked site. |
+| `NEEDS_FIELD_DATA` | 14 | The rule is permanently stubbed pending a scan-API input it doesn't currently accept, or requires real browser-rendered/PageSpeed-Insights measurement data that no static HTML crawl can produce. |
 
-## CANNOT_BREAK list (12 of 249)
+`222 + 13 + 14 = 249`. No rule fails.
 
-Rules that genuinely cannot be forced to fail without faking the violation:
+## The 27 non-`PASS` rules and why
+
+### `NOT_APPLICABLE` — platform/framework guarantees (8)
 
 | Rule ID | Reason |
 |---|---|
@@ -32,61 +34,49 @@ Rules that genuinely cannot be forced to fail without faking the violation:
 | `technical.ssl_certificate` | Vercel auto-provisions a trusted, valid TLS cert. |
 | `technical.www_redirect` | www/non-www resolution is controlled by Vercel's domain/DNS config, not app code. |
 | `technical.compression` | Vercel's edge always gzip/brotli-compresses text responses; no app-level override exists. |
-| `internal_linking.link_to_5xx_ratio` | Requires a same-site link that returns a real 5xx; Vercel/Next.js only ever serve 200 or a clean 404. |
 | `technical.doctype` | Next.js/React always emits `<!doctype html>` as the literal first bytes. |
-| `technical.charset` | Next.js always injects its own `<meta charSet="utf-8">` first in `<head>`; a later manual override has no effect on the first-match parser, and the rule only fails on a *missing* charset anyway, never a mismatch. |
-| `mobile.viewport_meta` | Next.js always injects a `<meta name="viewport">` tag; a route can only overwrite its content, never remove it. |
-| `internal_linking.orphan_pages` | Not Vercel-specific — verified from `crawler.service.ts`: the crawler builds its whole-crawl page set (`ctx.allPages`) purely via same-origin BFS over real `<a href>` links from the homepage, with no independent sitemap-based discovery feeding this rule. A page with truly zero inbound links can, by construction, never enter that set, so it can never be scored as an orphan — a self-hosted origin crawled the same way hits the identical wall. |
-| `internal_linking.inbound_links` | Same crawler-architecture constraint as `orphan_pages`: this coarser rule can only FAIL when literally zero internal links exist anywhere in the whole crawl, incompatible with any navigable site, regardless of hosting. |
+| `technical.charset` | Next.js always injects its own `<meta charSet="utf-8">` first in `<head>`. |
 
-`accessibility.lang_attribute` is genuinely BROKEN, not platform-blocked:
-the root layout sets `<html lang="">` (empty string), and the crawler reads
-`lang` via `$('html').attr('lang')?.trim() || null` — an empty string trims
-to falsy and becomes `null`, so every page on the site reports no lang
-attribute.
-
-## NEEDS_FIELD_DATA list (14 of 249)
-
-Rules verified (by reading their current `evaluate()` source, not the rule
-name) to be either permanently disabled stubs or dependent on real
-browser-rendered / PageSpeed-Insights measurement data no static-HTML
-crawler can ever produce — genuinely not exercisable by any fixture content:
+### `NOT_APPLICABLE` — structurally unfireable on any real site (3)
 
 | Rule ID | Reason |
 |---|---|
-| `content.search_intent_match` | Permanently disabled stub (`enabled:false`, `evaluate()` unconditionally returns not-applicable). Needs a target-keyword/query input added to the scan API. |
+| `internal_linking.inbound_links` | Only FAILs when literally zero internal links exist anywhere in the whole crawl — incompatible with any navigable site. |
+| `internal_linking.orphan_pages` | The crawler builds its page set purely via same-origin BFS over real `<a href>` links; a page with truly zero inbound links can never enter that set to begin with. |
+| `internal_linking.link_to_5xx_ratio` | Requires a same-site link that returns a real 5xx; Vercel/Next.js only ever serve a valid 200 or a clean 404 in production. |
+
+### `NOT_APPLICABLE` — opportunity-only, no trigger condition present (2)
+
+| Rule ID | Reason |
+|---|---|
+| `technical.pagination_discoverability` | WARNING-only; never fires without a paginated URL series, which this site has no need for. |
+| `technical.robots_important_pages_blocked` | robots.txt disallows nothing, so there is nothing blocked to flag. |
+
+### `NEEDS_FIELD_DATA` — permanently disabled stubs (3)
+
+| Rule ID | Reason |
+|---|---|
+| `content.search_intent_match` | `enabled:false`; `evaluate()` unconditionally returns not-applicable. Needs a target-keyword/query input the scan API doesn't accept. |
 | `content.semantic_keyword_coverage` | Same permanent-stub shape. Needs a target-keyword input. |
 | `content.topic_completeness` | Same permanent-stub shape. Needs a content-brief/subtopic-checklist input. |
-| `accessibility.color_contrast` | Unconditionally returns NOT_APPLICABLE — needs resolved CSS colors after cascade, unavailable to a static-HTML crawl. |
-| `mobile.touch_target_size` | Unconditionally returns NOT_APPLICABLE — needs rendered layout/box geometry. |
-| `mobile.font_readability` | Unconditionally returns NOT_APPLICABLE — needs resolved/computed CSS font-size. |
-| `mobile.horizontal_overflow` | Unconditionally returns NOT_APPLICABLE — needs rendered layout width comparison. |
-| `performance.lcp` / `performance.fcp` / `performance.cls` / `performance.inp` / `performance.speed_index` | Graded from real PageSpeed Insights lab data; no static crawl can produce these timings. |
+
+### `NEEDS_FIELD_DATA` — requires rendered-browser/lab measurement (11)
+
+| Rule ID | Reason |
+|---|---|
+| `accessibility.color_contrast` | Needs resolved CSS colors after cascade, unavailable to a static-HTML crawl. |
+| `mobile.touch_target_size` | Needs rendered layout/box geometry. |
+| `mobile.font_readability` | Needs resolved/computed CSS font-size. |
+| `mobile.horizontal_overflow` | Needs rendered layout width comparison. |
+| `performance.lcp` / `.fcp` / `.cls` / `.inp` / `.speed_index` | Graded from real PageSpeed Insights lab data; no static crawl can produce these timings. |
 | `performance.unused_css` | Needs real CSSOM coverage data from a rendered browser. |
 | `performance.unused_js` | Needs real code-execution coverage data from a rendered browser. |
 
-56 additional rules are `NOT_APPLICABLE` for other, page-shape-specific
-reasons — the real rule's own designed behavior (e.g. a rule that only
-evaluates FAQ content when FAQ intent is detected at all). Each is
-documented with its actual triggering condition in `/rules` and
-`lib/rule-status.ts`.
-
-## Fixed accessibility rules (12 of 249, on request)
-
-`/accessibility` and the root layout no longer trigger these — genuinely
-fixed, not faked:
-
-`accessibility.lang_attribute` (root layout `<html lang="en">`),
-`accessibility.keyboard_navigation`, `accessibility.responsive_images`,
-`accessibility.image_alt`, `accessibility.empty_alt`,
-`accessibility.form_label_association`, `accessibility.duplicate_alt`,
-`accessibility.link_accessible_name`, `accessibility.button_accessible_name`,
-`accessibility.duplicate_id`, `accessibility.aria_attribute_validity`,
-`accessibility.aria_role_validity`.
-
-`accessibility.image_filename_quality` was left intentionally broken (not
-requested). `accessibility.color_contrast` is untouched — it always returns
-NOT_APPLICABLE by rule design.
+Every other rule — all 222 — genuinely passes against the real, current
+site content: real E-E-A-T pages (`/about`, `/contact`, `/privacy-policy`,
+`/terms`), a real product/pricing/blog, valid page-type-appropriate JSON-LD,
+complete on-page metadata, site-wide security headers, and lean,
+render-blocking-free markup.
 
 ## Deploy to Vercel
 
@@ -96,48 +86,26 @@ vercel deploy --prod
 ```
 
 No environment variables or extra configuration needed. `next.config.ts`
-carries the redirect chains/loops used by several `technical.*` rules,
-`middleware.ts` carries the header-level violations (X-Robots-Tag, missing
-Cache-Control, insecure cookie). `app/robots.txt` and `public/sitemap.xml`
-are deleted entirely (not merely malformed) so no robots.txt/sitemap is
-served at all — `technical.robots_txt` and `technical.sitemap` read
-"missing" and FAIL. This has a disclosed side effect: `technical.robots_txt_validity`,
-`technical.sitemap_valid`, `technical.sitemap_urls_reachable`, and
-`technical.robots_important_pages_blocked` all depended on these files
-existing with specific broken content and now correctly read
-NOT_APPLICABLE ("not found") instead — see `/rules` for the full
-before/after reasoning on each.
+sets site-wide security headers (CSP, X-Frame-Options, X-Content-Type-Options,
+Referrer-Policy, Permissions-Policy, HSTS) and no redirect rules are needed —
+there are no redirect chains or loops anywhere on the site. `app/robots.txt`
+and `app/sitemap.ts` are both present and valid.
 
 ## Local development
 
 ```bash
 npm install
 npm run dev    # http://localhost:3000
-npm run build  # production build, used to verify all 249 rules are wired
+npm run build  # production build
 ```
 
 ## Structure
 
-- `/` — violates the SITE-scope rules that apply to the homepage.
-- One route per rule category (`/accessibility`, `/on-page`,
-  `/technical-markup`, `/technical-headers`, `/performance`, `/mobile`,
-  `/content`, `/ai-readability`, `/ai-summarization`,
-  `/conversational-structure`, `/semantic-depth`, `/entity-richness`,
-  `/eeat-signals`, `/faq-optimization`, `/structured-data`,
-  `/internal-linking`, `/security`, plus `/blog/eeat` for the two
-  PAGE-scope EEAT author rules that require `pageType: 'blog'`).
-- Supporting pages for SITE-scope rules that need real site structure:
-  `/hub`, `/hub/listing` (faceted-navigation filter/sort URLs),
-  `/pricing`, `/product`, `/blog`, `/blog/page/1`, `/blog/page/1/deeper`,
-  `/blog/page/1/deeper/d3` through `.../d8` (an 8-hop burial chain that
-  places `/product` at click-depth 9 with exactly 1 inbound link),
-  `/blog/page/2`, `/blog/stale-content` (freshness + external-references),
-  `/Broken/Page` and `/some_broken_page` (dirty on-page URL rules).
-- `/on-page/Legacy_Section/thisisaveryveryverylongopaqueslugwithnowordbreaksatall`
-  — a deliberately bad URL shape (uppercase, underscore, opaque long
-  segment, over-length) for the four `on_page.url_*` rules, plus a short H1
-  and a title/description duplicated from `/product`.
-- `/rules` — the full 249-row verification table.
-- `lib/rule-status.ts` — the data backing `/rules`, generated from reading
-  each rule's real `evaluate()` implementation in the georank-ai
-  `apps/backend` source, not guessed from rule names.
+- `/` — homepage with the product pitch, feature list, and a homepage FAQ (FAQPage JSON-LD).
+- `/product` — Fixture Scanner product overview (Product JSON-LD with offers).
+- `/pricing` — plan comparison table and pricing FAQ.
+- `/hub` — curated links to external standards (W3C, MDN, Google Search Central) and internal pages.
+- `/blog` — blog index; `/blog/responsive-images-guide` and `/blog/structured-data-checklist` are full articles with a named author, bio, Person schema, and BlogPosting + BreadcrumbList JSON-LD.
+- `/about`, `/contact`, `/privacy-policy`, `/terms` — the site-wide E-E-A-T trust pages, linked from the footer on every page.
+- `/rules` — the full 249-row rule compliance report.
+- `lib/rule-status.ts` — the data backing `/rules`, generated from reading each rule's real `evaluate()`/`check()` implementation in the georank-ai `apps/backend` source, not guessed from rule names.

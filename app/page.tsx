@@ -1,116 +1,127 @@
 import type { Metadata } from "next";
+import { SITE_NAME } from "./components";
 
-// on_page.title_brand_consistency (SITE): intentionally does NOT follow the "Page | Broken
-// Fixture Co" title convention every other page on the site follows once that pattern is
-// established.
 export const metadata: Metadata = {
-  title: "Welcome",
+  title: `${SITE_NAME} — Website Auditing Software`,
+  description:
+    "Fixture Scanner crawls a website and reports every technical, on-page, and structured-data issue it finds, with plain-language fixes for each one.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `${SITE_NAME} — Website Auditing Software`,
+    description:
+      "Fixture Scanner crawls a website and reports every technical, on-page, and structured-data issue it finds, with plain-language fixes for each one.",
+    url: "/",
+  },
 };
 
-const categories = [
-  ["accessibility", "Accessibility"],
-  ["ai-readability", "AI Readability"],
-  ["ai-summarization", "AI Summarization"],
-  ["content", "Content"],
-  ["conversational-structure", "Conversational Structure"],
-  ["entity-richness", "Entity Richness"],
-  ["faq-optimization", "FAQ Optimization"],
-  ["internal-linking", "Internal Linking"],
-  ["mobile", "Mobile"],
-  ["on-page", "On-Page"],
-  ["performance", "Performance"],
-  ["security", "Security"],
-  ["semantic-depth", "Semantic Depth"],
-  ["structured-data", "Structured Data"],
-  ["eeat-signals", "GEO E-E-A-T Signals"],
+const faqs = [
+  {
+    question: "What does Fixture Scanner actually check?",
+    answer:
+      "Fixture Scanner audits technical SEO (headers, redirects, canonicals, robots directives), on-page signals (titles, headings, meta descriptions), structured data validity, accessibility basics, and content depth — roughly 250 individual checks grouped into a dozen categories, each with its own pass/fail explanation.",
+  },
+  {
+    question: "How is Fixture Scanner different from a generic SEO checker?",
+    answer:
+      "Most checkers hand back a single numeric score. Fixture Scanner instead names the exact rule that failed, quotes the offending markup, and explains the fix in plain language — so an engineer can act on the report without translating a grade into a task.",
+  },
+  {
+    question: "Can I try Fixture Scanner before paying?",
+    answer:
+      "Yes. Every plan on the Pricing page includes a 14-day trial with the full rule set enabled, including structured-data validation and scheduled re-scans. No credit card is required to start a trial.",
+  },
+  {
+    question: "Does Fixture Scanner support scheduled re-scans?",
+    answer:
+      "Fixture Scanner can re-crawl a site on a schedule and alert your team by email or Slack the moment a previously-passing rule regresses — useful for catching a broken deploy before a customer does. See the Product page for the full monitoring feature set.",
+  },
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
 
 export default function Home() {
   return (
-    <main style={{ maxWidth: 720, margin: "40px auto", padding: "0 20px" }}>
-      <h1>Broken Fixture Co</h1>
-      <p>TEST FIXTURE — intentionally broken, not a real business.</p>
-      <p>
-        This site is a QA fixture built to verify that the GeoRank AI
-        scanner correctly flags every one of its 249 automated SEO/GEO
-        checks. Every category page below genuinely violates every
-        PAGE-scope rule in its category. SITE-scope rules are broken
-        site-wide — see <a href="/rules">/rules</a> for the full
-        rule-by-rule breakdown.
-      </p>
+    <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
-      {/* Site-wide E-E-A-T / trust signals are deliberately absent: no About page, no Privacy
-          Policy, no Terms & Conditions, no Contact page, no mailto:/tel: link, and no
-          <address> anywhere on this site — eeat.about_page, eeat.privacy_policy,
-          eeat.terms_conditions, eeat.contact_information, eeat.business_trust_signals all fail. */}
+      <section className="container container--wide">
+        <h1>Find every SEO issue before your customers do</h1>
+        <p>
+          This page explains what {SITE_NAME} builds: <strong>Fixture Scanner</strong> is a
+          website-auditing tool that crawls a site and reports every
+          technical, on-page, and structured-data issue it finds, with a
+          plain-language fix for each one. We started building it in 2021
+          after watching a client&rsquo;s redesign quietly ship with a broken
+          canonical tag that cost them three weeks of search traffic before
+          anyone noticed — every feature we&rsquo;ve added since traces back
+          to a real audit gap like that one.
+        </p>
 
-      <nav>
+        <h2>What Fixture Scanner checks</h2>
+        <p>
+          Fixture Scanner groups its checks into a dozen categories so a
+          report reads like a checklist, not a wall of jargon:
+        </p>
         <ul>
-          {categories.map(([slug, label]) => (
-            <li key={slug}>
-              <a href={`/${slug}`}>{label}</a>
-            </li>
-          ))}
           <li>
-            <a href="/blog">Blog</a>
-          </li>
-          {/* internal_linking.important_pages_reachability / important_page_inlinks /
-              link_depth_distribution (SITE): /product is NOT linked here (or from /blog) on
-              purpose -- its only inbound link is 9 clicks deep via
-              /blog/page/1/deeper/d3.../d8, see /product's own notes. */}
-          <li>
-            <a href="/hub">Resources Hub</a>
+            <strong>Technical SEO</strong> — redirects, canonicals, robots
+            directives, sitemap validity, and response headers.
           </li>
           <li>
-            <a href="/technical-markup">Technical Markup Fixture</a>
+            <strong>On-page signals</strong> — titles, meta descriptions,
+            heading hierarchy, and Open Graph/Twitter Card metadata.
           </li>
           <li>
-            <a href="/technical-headers">Technical Headers Fixture</a>
+            <strong>Structured data</strong> — JSON-LD presence, required
+            properties, and schema type validity for every page type.
           </li>
           <li>
-            <a href="/rules">Full rule list (/rules)</a>
-          </li>
-          {/* on_page.url_lowercase / on_page.url_hyphen_usage: dirty-URL demonstration routes,
-              linked here so they're actually crawled. */}
-          <li>
-            <a href="/Broken/Page">Broken Page (uppercase URL)</a>
-          </li>
-          <li>
-            <a href="/some_broken_page">Some Broken Page (underscore URL)</a>
+            <strong>Content depth &amp; accessibility</strong> — word count,
+            readability, alt text, and keyboard navigation basics.
           </li>
         </ul>
-      </nav>
 
-      {/* technical.broken_external_links: outbound link to a non-resolving domain. */}
-      <p>
-        Read more on{" "}
-        <a href="https://this-domain-does-not-exist-broken-fixture-qa.invalid/dead-link">
-          our partner site
-        </a>
-        .
-      </p>
+        <h2>Who uses Fixture Scanner</h2>
+        <p>
+          Marketing and engineering teams run Fixture Scanner before a launch
+          and again on a recurring schedule afterward, so a regression is
+          caught by an alert instead of a support ticket. Most teams connect
+          their first site and get a full report in under five minutes. Read
+          the <a href="/product">product overview</a> for the complete
+          feature list, or compare plans on the{" "}
+          <a href="/pricing">pricing page</a>.
+        </p>
 
-      {/* technical.pagination_discoverability: both series members are reached via separate
-          direct links from here rather than via a "Next" widget connecting them to each other,
-          so /blog/page/1 never links onward to /blog/page/2 — see /blog/page/1 and
-          /blog/page/2. /blog/page/1 also leads on (via /blog/page/1/deeper) to /pricing, giving
-          pricing its one buried inbound link at click-depth 3. */}
-      <p>
-        <a href="/blog/page/1">Blog archive, page 1</a>{" "}
-        <a href="/blog/page/2">Blog archive, page 2</a>
-      </p>
+        <h2>Frequently asked questions</h2>
+        <div>
+          {faqs.map((f) => (
+            <div key={f.question} style={{ marginBottom: 20 }}>
+              <h3>{f.question}</h3>
+              <p>{f.answer}</p>
+            </div>
+          ))}
+        </div>
 
-      {/* internal_linking.important_page_inlinks / important_pages_reachability (SITE):
-          /pricing is deliberately not linked from here (or any nav/primary page) directly —
-          its only inbound link is buried 3 clicks deep via /blog/page/1 -> .../deeper, see
-          /pricing. The category pages also never link back to each other or to this home page,
-          so inbound concentration for most of the site sits entirely on this one page. */}
-
-      {/* internal_linking.orphan_pages / internal_linking.inbound_links (SITE):
-          CANNOT_BREAK_ON_VERCEL — the crawler discovers pages purely by following <a href>
-          links from the homepage (BFS crawl), so a page with literally zero inbound links from
-          anywhere is by construction never crawled at all and never appears in the rule's page
-          set to be scored — see /rules. */}
+        <div className="callout">
+          <p>
+            <strong>Tip:</strong> new to Fixture Scanner? Start with the{" "}
+            <a href="/hub">resource hub</a> for setup guides, or read{" "}
+            <a href="/blog">our blog</a> for the auditing practices we use
+            internally.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

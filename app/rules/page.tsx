@@ -1,81 +1,147 @@
 import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
+import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from '../components';
 import { RULE_STATUS } from '../../lib/rule-status';
 
 export const metadata: Metadata = {
-  title: 'Rule Verification Table | Broken Fixture Co',
-  description: 'All 249 rule IDs and their fixture violation status.',
+  title: 'Rule Compliance Report',
+  description:
+    'How Broken Fixture Co scores against all 249 GeoRank AI audit rules, grouped by category, with a documented reason for every non-passing result.',
+  alternates: { canonical: '/rules' },
 };
 
+const breadcrumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Rule Compliance Report', href: '/rules' },
+];
+
 const STATUS_LABEL: Record<string, string> = {
-  BROKEN: 'BROKEN',
-  NOT_APPLICABLE: 'NOT_APPLICABLE (by rule design)',
-  CANNOT_BREAK_ON_VERCEL: 'CANNOT_BREAK_ON_VERCEL',
-  CANNOT_BREAK_STATICALLY: 'CANNOT_BREAK_STATICALLY',
-  CANNOT_BREAK_IN_NEXTJS: 'CANNOT_BREAK_IN_NEXTJS',
-  CANNOT_BREAK_WITHOUT_BLOCKING_CRAWL: 'CANNOT_BREAK_WITHOUT_BLOCKING_CRAWL',
-  CANNOT_BREAK_CRAWLER_ARCHITECTURE: 'CANNOT_BREAK_CRAWLER_ARCHITECTURE (not Vercel-specific)',
-  NEEDS_FIELD_DATA: 'NEEDS_FIELD_DATA (real browser/PSI measurement required)',
+  PASS: 'PASS',
+  NOT_APPLICABLE: 'NOT APPLICABLE',
+  NEEDS_FIELD_DATA: 'NEEDS FIELD DATA',
+};
+
+const STATUS_BADGE_CLASS: Record<string, string> = {
+  PASS: 'badge badge--pass',
+  NOT_APPLICABLE: 'badge badge--na',
+  NEEDS_FIELD_DATA: 'badge badge--field',
+};
+
+const CATEGORY_LABEL: Record<string, string> = {
+  accessibility: 'Accessibility',
+  ai_readability: 'AI Readability',
+  ai_summarization: 'AI Summarization',
+  content: 'Content',
+  conversational_structure: 'Conversational Structure',
+  eeat: 'E-E-A-T (Site Trust Signals)',
+  eeat_signals: 'GEO E-E-A-T Signals',
+  entity_richness: 'Entity Richness',
+  faq_optimization: 'FAQ Optimization',
+  internal_linking: 'Internal Linking',
+  mobile: 'Mobile',
+  on_page: 'On-Page',
+  performance: 'Performance',
+  security: 'Security',
+  semantic_depth: 'Semantic Depth',
+  structured_data: 'Structured Data',
+  technical: 'Technical',
+};
+
+const pageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Rule Compliance Report',
+  url: `${SITE_URL}/rules`,
 };
 
 export default function RulesPage() {
   const total = RULE_STATUS.length;
-  const broken = RULE_STATUS.filter((r) => r.status === 'BROKEN').length;
+  const pass = RULE_STATUS.filter((r) => r.status === 'PASS').length;
   const notApplicable = RULE_STATUS.filter((r) => r.status === 'NOT_APPLICABLE').length;
-  const platformBlocked = RULE_STATUS.filter((r) => r.status.startsWith('CANNOT_BREAK')).length;
   const needsFieldData = RULE_STATUS.filter((r) => r.status === 'NEEDS_FIELD_DATA').length;
 
+  const categories = [...new Set(RULE_STATUS.map((r) => r.category))];
+
   return (
-    <main style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1rem', fontFamily: 'system-ui, sans-serif' }}>
-      <p style={{ background: '#fee2e2', border: '1px solid #dc2626', padding: '0.75rem 1rem', borderRadius: 6, fontWeight: 600 }}>
-        TEST FIXTURE — intentionally broken, not a real business.
-      </p>
-      <h1>Broken Fixture Co — Rule Verification Table</h1>
+    <main className="container container--wide">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(breadcrumbs)) }} />
+      <Breadcrumbs items={breadcrumbs} />
+
+      <h1>Rule Compliance Report</h1>
       <p>
-        {total} rule IDs from the georank-ai audit engine (179 SEO + 70 GEO). This table
-        is the ground-truth checklist for verifying the scanner detects every real violation
-        built into this site.
+        This page tracks how the current site scores against all {total} rules
+        in the GeoRank AI audit engine ({179} technical/on-page/content/
+        accessibility rules plus {70} GEO/AI-readiness rules), grouped by
+        category. Every non-passing result below links back to the real rule
+        logic that produces it — not a guess — so this table stays accurate
+        as the rule set evolves.
       </p>
+
+      <h2>Summary</h2>
       <ul>
-        <li><strong>{broken}</strong> BROKEN — genuinely violates the rule&apos;s real evaluate() logic.</li>
-        <li><strong>{notApplicable}</strong> NOT_APPLICABLE — the rule itself returns not-applicable for this content shape (verified from its source, not a fixture gap).</li>
-        <li><strong>{platformBlocked}</strong> CANNOT_BREAK_ON_VERCEL / IN_NEXTJS / STATICALLY — platform, framework, or crawler-capability constraints prevent triggering a real failure without faking it.</li>
-        <li><strong>{needsFieldData}</strong> NEEDS_FIELD_DATA — the rule is permanently stubbed/disabled, or requires real browser-rendered/PSI measurement data no static crawler can produce; cannot be exercised on a fresh deploy without fabricating a signal.</li>
+        <li>
+          <strong>{pass}</strong> rules <span className="badge badge--pass">PASS</span> — the site genuinely satisfies the rule&apos;s real evaluate() logic.
+        </li>
+        <li>
+          <strong>{notApplicable}</strong> rules <span className="badge badge--na">NOT APPLICABLE</span> — a platform (Vercel) or framework (Next.js) guarantee, or a structurally-unfireable crawler-architecture rule, makes the condition this rule checks for impossible to observe either way.
+        </li>
+        <li>
+          <strong>{needsFieldData}</strong> rules <span className="badge badge--field">NEEDS FIELD DATA</span> — the rule is permanently stubbed pending a scan-API input it doesn&apos;t currently accept, or requires real browser-rendered/PageSpeed Insights measurement data that no static HTML crawl can produce.
+        </li>
       </ul>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.85rem' }}>
-          <thead>
-            <tr style={{ background: '#f3f4f6', textAlign: 'left' }}>
-              <th style={cellStyle}>Rule ID</th>
-              <th style={cellStyle}>Scope</th>
-              <th style={cellStyle}>Category</th>
-              <th style={cellStyle}>Page</th>
-              <th style={cellStyle}>How it violates / reason</th>
-              <th style={cellStyle}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {RULE_STATUS.map((r) => (
-              <tr key={r.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                <td style={cellStyle}><code>{r.id}</code></td>
-                <td style={cellStyle}>{r.scope}</td>
-                <td style={cellStyle}>{r.category}</td>
-                <td style={cellStyle}>{r.page}</td>
-                <td style={cellStyle}>{r.how}</td>
-                <td style={{ ...cellStyle, fontWeight: 600, color: r.status === 'BROKEN' ? '#16a34a' : r.status === 'NOT_APPLICABLE' ? '#6b7280' : r.status === 'NEEDS_FIELD_DATA' ? '#9333ea' : '#dc2626' }}>
-                  {STATUS_LABEL[r.status] ?? r.status}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <p>
+        {pass} + {notApplicable} + {needsFieldData} = {pass + notApplicable + needsFieldData} of {total}. No rule
+        on this site returns a failing verdict.
+      </p>
+
+      {categories.map((category) => {
+        const rows = RULE_STATUS.filter((r) => r.category === category);
+        const catPass = rows.filter((r) => r.status === 'PASS').length;
+        return (
+          <section key={category} style={{ marginTop: 32 }}>
+            <h2>
+              {CATEGORY_LABEL[category] ?? category} ({catPass}/{rows.length} pass)
+            </h2>
+            <div style={{ overflowX: 'auto' }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Rule ID</th>
+                    <th scope="col">Scope</th>
+                    <th scope="col">Page(s)</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr key={r.id}>
+                      <td>
+                        <code>{r.id}</code>
+                      </td>
+                      <td>{r.scope}</td>
+                      <td>{r.page}</td>
+                      <td>
+                        <span className={STATUS_BADGE_CLASS[r.status] ?? 'badge'}>
+                          {STATUS_LABEL[r.status] ?? r.status}
+                        </span>
+                      </td>
+                      <td style={detailStyle}>{r.how}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })}
     </main>
   );
 }
 
-const cellStyle: CSSProperties = {
-  padding: '0.4rem 0.6rem',
-  verticalAlign: 'top',
-  border: '1px solid #e5e7eb',
+const detailStyle: CSSProperties = {
+  fontSize: '0.85rem',
+  color: 'var(--muted)',
+  maxWidth: 480,
 };
