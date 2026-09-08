@@ -74,6 +74,17 @@ export default function ContactPage() {
         technical SEO tooling. Mention that context in your email and
         we&rsquo;ll loop in the right person on the team.
       </p>
+
+      <h2>Response times</h2>
+      <p>
+        We&rsquo;re a small team, so we read and respond to every message
+        ourselves rather than routing it through a ticketing system. Most
+        emails get a reply within one business day; urgent account issues
+        raised by phone are typically handled the same day. If you
+        haven&rsquo;t heard back after two business days, feel free to
+        follow up — it usually means the message landed in the wrong inbox
+        rather than being ignored.
+      </p>
     </main>
   );
 }
