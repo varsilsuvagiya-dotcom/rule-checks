@@ -74,6 +74,56 @@ export default function BlogPage() {
         ))}
       </ul>
 
+      <h2>Why we write about our own audit findings</h2>
+      <p>
+        Most technical-SEO content on the web is written to rank for a
+        keyword, not because the author fixed the problem themselves last
+        week. We write the opposite way: someone on our team hits a real
+        issue while auditing a client site or dogfooding Fixture Scanner
+        against our own pages, fixes it, and only then decides whether the
+        fix generalizes well enough to be worth a full writeup. That&rsquo;s
+        a slower publishing cadence than most engineering blogs, but it
+        means every recommendation here has actually shipped somewhere.
+      </p>
+      <p>
+        The two categories we return to most are structured data and
+        Core Web Vitals, because they share a property that makes them easy
+        to get subtly wrong: the markup or the image tag looks correct at a
+        glance, and the mistake only shows up once you check it against the
+        actual validator or the actual field-measured metric. Our{" "}
+        <a href="/blog/structured-data-checklist">
+          structured data checklist
+        </a>{" "}
+        and{" "}
+        <a href="/blog/responsive-images-guide">responsive images guide</a>{" "}
+        both walk through exactly that kind of quiet failure.
+      </p>
+
+      <h2>What to expect from a post here</h2>
+      <p>
+        Every article follows the same shape: a short introduction stating
+        the problem, a breakdown of the specific mistakes that cause it, a
+        working pattern you can copy directly, and a short FAQ addressing
+        the follow-up questions we actually get asked. We&rsquo;d rather
+        publish four thorough guides a year than forty shallow ones, so the
+        list above will stay short — check back periodically, or read the{" "}
+        <a href="/hub">resource hub</a> in the meantime for the external
+        standards we reference most.
+      </p>
+
+      <h2>Who writes these</h2>
+      <p>
+        Every post here carries a named author with their own background in
+        the field, rather than an anonymous house voice. That&rsquo;s a
+        deliberate choice: when an article says a particular fix worked, we
+        want you to be able to see who made that claim and what they
+        actually do day to day. Our current author roster works directly on
+        the crawler and rule engine behind Fixture Scanner, so the guidance
+        here reflects the same logic the product checks for automatically —
+        nothing in a post here contradicts what the scanner itself would
+        flag on your own site.
+      </p>
+
       <div className="callout">
         <p>
           Looking for external standards instead of our own writing? The{" "}

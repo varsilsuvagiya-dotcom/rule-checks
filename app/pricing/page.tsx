@@ -105,6 +105,10 @@ export default function PricingPage() {
       <p>Yes, every plan includes a 14-day trial with no credit card required, covering the full rule set at that plan&apos;s page-limit tier.</p>
       <h3>What happens if I go over my page limit?</h3>
       <p>We&apos;ll notify you before the scan completes and let you upgrade mid-cycle with a prorated charge for the difference — a scan is never silently cut short.</p>
+      <h3>Do all plans get the same rule coverage?</h3>
+      <p>Yes — every plan runs the full rule set covering technical SEO, on-page signals, structured data, accessibility, content depth, and AI-readiness checks. We never gate a specific rule behind a higher tier; the differences between plans are scan frequency, page volume, team seats, and API access.</p>
+      <h3>Can I get an invoice for my finance team?</h3>
+      <p>Yes — every plan generates a proper invoice automatically after each billing cycle, available from your account settings, and Enterprise customers can request net-30 terms and a custom purchase order process.</p>
 
       <div className="callout">
         <p>

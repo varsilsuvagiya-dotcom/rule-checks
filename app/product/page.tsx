@@ -69,7 +69,7 @@ export default function ProductPage() {
         real definition, not a vague category label.
       </p>
 
-      <h2>What's included</h2>
+      <h2>What&apos;s included</h2>
       <p>
         Every scan covers technical SEO (redirects, canonicals, robots
         directives, response headers), on-page signals (titles, headings,
