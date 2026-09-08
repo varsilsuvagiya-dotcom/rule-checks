@@ -22,14 +22,11 @@ export const metadata: Metadata = {
     "Broken Fixture Co — a QA test fixture site with intentionally broken SEO/GEO signals.",
 };
 
-// mobile.viewport_configured: user-scalable disabled + maximum-scale=1 locks pinch-zoom,
-// a hard FAIL for that rule. (mobile.viewport_meta is broken separately per-category page by
-// omitting the viewport tag there instead of relying on this root layout value.)
+// mobile.viewport_configured: FIXED per user request, site-wide -- real device-width scaling,
+// no zoom lock (no maximum-scale=1, no user-scalable=no).
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
