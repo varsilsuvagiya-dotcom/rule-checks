@@ -1,106 +1,90 @@
-"use client";
-// QA fixture page — intentionally violates every PAGE-scope rule in the `accessibility`
-// category so the scanner's accessibility rules can be verified against a known-broken page.
-// See per-rule comments below for exactly which real check each element trips.
-// Marked "use client": it uses an inline event handler (onClick) below, which a Server
-// Component cannot pass as a prop to a plain DOM element during static prerendering.
+// QA fixture page for the `accessibility` category. Per user request, the following rules
+// are now FIXED (no longer exercised as failures here): keyboard_navigation, lang_attribute
+// (fixed site-wide in app/layout.tsx), responsive_images, image_alt, empty_alt,
+// form_label_association, duplicate_alt, link_accessible_name, button_accessible_name,
+// duplicate_id, aria_attribute_validity, aria_role_validity.
+//
+// Still intentionally broken (not requested to be fixed): image_filename_quality.
+// Left as-is (rule always returns NOT_APPLICABLE by design): color_contrast.
 export default function AccessibilityFixturePage() {
   return (
     <main>
       <h1>TEST FIXTURE — intentionally broken, not a real business.</h1>
       <p>Broken Fixture Co — accessibility rule violations fixture page.</p>
 
-      {/* accessibility.aria_attribute_validity: "aria-labl" is not a recognized WAI-ARIA
-          attribute name (typo of aria-label) -> invalidAriaAttributes.length > 0. */}
-      <div aria-labl="not a real aria attribute">Bogus aria-* attribute name on this div.</div>
+      {/* accessibility.aria_attribute_validity: FIXED -- valid aria-label attribute name. */}
+      <div aria-label="Descriptive label using a real ARIA attribute name.">
+        Valid aria-* attribute name on this div.
+      </div>
 
-      {/* accessibility.aria_role_validity: "role=banner-thing" is not a valid WAI-ARIA
-          concrete role -> invalidAriaRoles.length > 0. */}
-      <div role="banner-thing">Bogus role value on this div.</div>
+      {/* accessibility.aria_role_validity: FIXED -- valid WAI-ARIA concrete role. */}
+      <div role="region" aria-label="Example region">
+        Valid role value on this div.
+      </div>
 
-      {/* accessibility.button_accessible_name: icon-only <button> with no text, no
-          aria-label/aria-labelledby, no title, no img[alt] -> buttonsMissingAccessibleName > 0. */}
-      <button type="button">
+      {/* accessibility.button_accessible_name: FIXED -- icon button now has aria-label. */}
+      <button type="button" aria-label="Close dialog">
         <svg width="16" height="16" aria-hidden="true">
           <circle cx="8" cy="8" r="6" />
         </svg>
       </button>
 
-      {/* accessibility.color_contrast: this rule always returns NOT_APPLICABLE by design —
+      {/* accessibility.color_contrast: rule always returns NOT_APPLICABLE by design --
           it needs resolved/rendered CSS colors (browser/axe-core), which a static HTML crawl
-          can never provide, so per the rule's own source it deliberately refuses to guess from
-          inline styles. Nothing to break here; documented as NOT_APPLICABLE. */}
+          can never provide. Nothing to fix or break here. */}
 
-      {/* accessibility.duplicate_alt: two distinct images sharing identical, non-empty alt text
-          -> duplicate alt value counted twice. */}
-      <img src="/team-photo-1.jpg" alt="Our team at the office" />
-      <img src="/team-photo-2.jpg" alt="Our team at the office" />
+      {/* accessibility.duplicate_alt: FIXED -- each image has distinct, descriptive alt text. */}
+      <img src="/team-photo-1.jpg" alt="Engineering team standing outside the office entrance" />
+      <img src="/team-photo-2.jpg" alt="Support team gathered around a conference table" />
 
-      {/* accessibility.duplicate_id: React normally warns/rewrites duplicate ids, so real
-          duplicate id="..." attributes are injected via dangerouslySetInnerHTML to guarantee
-          they land unmodified in the rendered/crawled HTML -> duplicateIds.length > 0. */}
-      <div
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: `
-            <div id="dup-section">First element with a duplicated id.</div>
-            <div id="dup-section">Second element reusing the same id.</div>
-          `,
-        }}
-      />
+      {/* accessibility.duplicate_id: FIXED -- unique ids, no dangerouslySetInnerHTML injection. */}
+      <div id="team-section-1">First element with a unique id.</div>
+      <div id="team-section-2">Second element with a different unique id.</div>
 
-      {/* accessibility.empty_alt: a non-decorative content image with alt="" (not missing,
-          literally empty) -> emptyAlt.length > 0. */}
-      <img src="/product-showcase.jpg" alt="" />
+      {/* accessibility.empty_alt: FIXED -- non-decorative content image has descriptive alt text. */}
+      <img src="/product-showcase.jpg" alt="Product showcase display in the demo showroom" />
 
-      {/* accessibility.form_label_association: text input with no <label for>, no wrapping
-          <label>, no aria-label/aria-labelledby -> formControlsMissingLabel > 0. */}
+      {/* accessibility.form_label_association: FIXED -- input has an associated label. */}
       <form>
-        <input type="text" name="newsletter-email" placeholder="Enter your email" />
+        <label htmlFor="newsletter-email">Email address</label>
+        <input type="text" id="newsletter-email" name="newsletter-email" placeholder="Enter your email" />
       </form>
 
-      {/* accessibility.image_alt: img with the alt attribute entirely absent (not empty)
-          -> imagesMissingAlt > 0. */}
-      <img src="/hero-banner.jpg" />
+      {/* accessibility.image_alt: FIXED -- alt attribute present. */}
+      <img src="/hero-banner.jpg" alt="Hero banner for the fixture homepage" />
 
-      {/* accessibility.image_filename_quality: generic camera/CMS-style filename matching
-          GENERIC_PATTERN (img/dsc/photo/screenshot/untitled/scan + optional digits)
-          -> generic.length > 0. Needs >50% of images on the page to be generic to WARN, so
-          most images above intentionally also use generic-looking names. */}
+      {/* accessibility.image_filename_quality: left intentionally broken (not requested). */}
       <img src="/IMG_4821.jpg" alt="Generic camera filename example" />
       <img src="/DSC00193.png" alt="Another generic camera filename example" />
       <img src="/Screenshot_2024.png" alt="Generic screenshot filename example" />
 
-      {/* accessibility.keyboard_navigation: no "skip to content" link anywhere on the page
-          -> hasSkipNavLink === false. (Intentionally no <a href="#main">Skip to content</a>.) */}
+      {/* accessibility.keyboard_navigation: FIXED -- real skip-to-content link present. */}
+      <a href="#main-content">Skip to content</a>
 
-      {/* accessibility.lang_attribute: this signal is read from the document-level <html lang>
-          attribute, which this app sets once in app/layout.tsx (shared by every route, including
-          non-fixture pages). Removing/breaking it there would falsely break every other page's
-          scan too, so it is left CANNOT_BREAK_STATICALLY from this page-scoped fixture file. */}
+      {/* accessibility.lang_attribute: FIXED in app/layout.tsx (<html lang="en">), site-wide. */}
 
-      {/* accessibility.link_accessible_name: anchor containing only a decorative icon, no text,
-          no aria-label/aria-labelledby, no title, no alt on a contained image
-          -> linksMissingAccessibleName > 0. */}
-      {/* NOTE: intentionally NOT "/contact" -- that path incidentally matched
-          eeat.contact_information's CONTACT_PATTERN (any internal link whose path matches
-          /\/contact([-/]|$)/i counts as "found", even if never crawled), causing that SITE-scope
-          rule to falsely PASS. Uses an unrelated dead path instead so this link-accessible-name
-          fixture doesn't leak a false contact-page signal. */}
-      <a href="/icon-link-no-name">
+      {/* accessibility.link_accessible_name: FIXED -- link has an accessible name via aria-label. */}
+      <a href="/icon-link-no-name" aria-label="Learn more about this example">
         <svg width="16" height="16" aria-hidden="true">
           <path d="M2 2 L14 14" />
         </svg>
       </a>
 
-      {/* accessibility.keyboard_navigation (interactive-div note): also included for good
-          measure though not separately scored beyond skip-nav — a clickable div with no
-          tabIndex/keyboard handler, unreachable by keyboard. */}
-      <div onClick={() => {}}>Click me (not keyboard accessible)</div>
+      {/* keyboard_navigation (interactive-element note): FIXED -- clickable element is a real
+          <button>, natively focusable and keyboard-activatable, not a div with onClick. */}
+      <button type="button">Click me (keyboard accessible)</button>
 
-      {/* accessibility.responsive_images: content image with no srcset/sizes attribute at all
-          -> withoutSrcset.length > 0. */}
-      <img src="/large-hero-image.jpg" alt="Large hero image with no responsive srcset" width={2400} height={1200} />
+      {/* accessibility.responsive_images: FIXED -- content image now has srcset/sizes. */}
+      <img
+        src="/large-hero-image.jpg"
+        srcSet="/large-hero-image-800.jpg 800w, /large-hero-image-1600.jpg 1600w, /large-hero-image-2400.jpg 2400w"
+        sizes="(max-width: 800px) 100vw, (max-width: 1600px) 50vw, 33vw"
+        alt="Large hero image with a responsive srcset"
+        width={2400}
+        height={1200}
+      />
+
+      <div id="main-content" />
     </main>
   );
 }

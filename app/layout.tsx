@@ -34,9 +34,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // accessibility.lang_attribute: lang is deliberately set to an empty/invalid value so the
-    // <html> tag carries no usable language declaration.
-    <html lang="" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       {/* technical.charset: CANNOT_BREAK_ON_NEXTJS — Next.js always injects its own
           <meta charSet="utf-8"> as the very first element in <head> ("Default Field"), before
           any manually-added <head> children render. cheerio's meta[charset] selector picks the

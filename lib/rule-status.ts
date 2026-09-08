@@ -24,20 +24,20 @@ export interface RuleStatusEntry {
 
 export const RULE_STATUS: RuleStatusEntry[] = [
   // ---- accessibility (14 PAGE) ----
-  { id: 'accessibility.aria_attribute_validity', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Invalid ARIA attribute name (aria-labl, typo of aria-label).' },
-  { id: 'accessibility.aria_role_validity', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Invalid role value (role="banner-thing").' },
-  { id: 'accessibility.button_accessible_name', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Icon-only <button> with no text/aria-label/title.' },
+  { id: 'accessibility.aria_attribute_validity', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: uses a real aria-label attribute name instead of the aria-labl typo.' },
+  { id: 'accessibility.aria_role_validity', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: uses a valid WAI-ARIA role (region) instead of the bogus banner-thing value.' },
+  { id: 'accessibility.button_accessible_name', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: icon-only <button> now has aria-label="Close dialog".' },
   { id: 'accessibility.color_contrast', scope: 'PAGE', category: 'accessibility', page: 'n/a', status: 'NEEDS_FIELD_DATA', how: 'Re-verified from current source (color-contrast.rule.ts): evaluate() unconditionally returns NOT_APPLICABLE ("not measurable -- requires resolved CSS colors (browser/axe-core), unavailable from a static HTML crawl"). No inline-style content shape can change this -- confirmed NOT a fixture gap.' },
-  { id: 'accessibility.duplicate_alt', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Two distinct <img> share identical non-empty alt text.' },
-  { id: 'accessibility.duplicate_id', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'dangerouslySetInnerHTML injects two elements with id="dup-section" (bypasses React dedup).' },
-  { id: 'accessibility.empty_alt', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Content <img alt=""> on a non-decorative photo.' },
-  { id: 'accessibility.form_label_association', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: '<input> with no label / aria-label / aria-labelledby.' },
-  { id: 'accessibility.image_alt', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: '<img> with alt attribute entirely absent.' },
+  { id: 'accessibility.duplicate_alt', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: each image has distinct, descriptive alt text.' },
+  { id: 'accessibility.duplicate_id', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: unique ids used, no dangerouslySetInnerHTML injection.' },
+  { id: 'accessibility.empty_alt', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: content image now has descriptive alt text instead of alt="".' },
+  { id: 'accessibility.form_label_association', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: input has an associated <label htmlFor>.' },
+  { id: 'accessibility.image_alt', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: alt attribute present on the image.' },
   { id: 'accessibility.image_filename_quality', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Filenames like IMG_4821.jpg, DSC00193.png match the generic-filename pattern.' },
-  { id: 'accessibility.keyboard_navigation', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'No skip-nav link anywhere on the page; a clickable div has onClick with no tabIndex/keyboard handler.' },
-  { id: 'accessibility.lang_attribute', scope: 'PAGE', category: 'accessibility', page: '/ (root layout, site-wide)', status: 'BROKEN', how: 'Root layout sets <html lang=""> (empty string). The crawler reads lang via $("html").attr("lang")?.trim() || null -- an empty string trims to falsy and becomes null, so every page on the site genuinely reports no lang attribute (WARNING), not just /accessibility.' },
-  { id: 'accessibility.link_accessible_name', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: '<a> contains only a decorative aria-hidden svg, no text/aria-label/title.' },
-  { id: 'accessibility.responsive_images', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'BROKEN', how: 'Large <img> with no srcset/sizes.' },
+  { id: 'accessibility.keyboard_navigation', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: a real "Skip to content" link is present, and the clickable element is a native <button> instead of a div with onClick.' },
+  { id: 'accessibility.lang_attribute', scope: 'PAGE', category: 'accessibility', page: '/ (root layout, site-wide)', status: 'NOT_APPLICABLE', how: 'FIXED per user request: root layout now sets <html lang="en">. No longer exercised as a failure anywhere on the site.' },
+  { id: 'accessibility.link_accessible_name', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: link now has aria-label="Learn more about this example".' },
+  { id: 'accessibility.responsive_images', scope: 'PAGE', category: 'accessibility', page: '/accessibility', status: 'NOT_APPLICABLE', how: 'FIXED per user request: large content image now has srcset/sizes.' },
 
   // ---- ai_readability (10 PAGE) ----
   { id: 'ai_readability.content_chunk_size', scope: 'PAGE', category: 'ai_readability', page: '/ai-readability', status: 'BROKEN', how: 'Two giant merged-wall paragraphs (~1000 words each), 100% wall ratio vs 0.3 threshold.' },

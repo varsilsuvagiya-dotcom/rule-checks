@@ -13,8 +13,8 @@ platform/framework constraint, or `NEEDS_FIELD_DATA`).
 
 | Status | Count | Meaning |
 |---|---|---|
-| `BROKEN` | 167 | Genuinely violates the rule's real `evaluate()` logic. |
-| `NOT_APPLICABLE` | 56 | The rule itself returns not-applicable for this content shape (verified from source, not a fixture gap). |
+| `BROKEN` | 155 | Genuinely violates the rule's real `evaluate()` logic. |
+| `NOT_APPLICABLE` | 68 | The rule itself returns not-applicable for this content shape, OR (12 accessibility rules) was deliberately fixed per user request — see below. |
 | `CANNOT_BREAK_ON_VERCEL` | 7 | Vercel/platform-edge behavior prevents triggering a real failure. Would need a self-hosted origin. |
 | `CANNOT_BREAK_IN_NEXTJS` | 3 | Next.js/React always emits the compliant output; no app-level override exists. |
 | `CANNOT_BREAK_CRAWLER_ARCHITECTURE` | 2 | Not hosting-specific — the scanner's own BFS crawl-discovery design makes the condition structurally unreachable, on any origin. |
@@ -70,6 +70,23 @@ reasons — the real rule's own designed behavior (e.g. a rule that only
 evaluates FAQ content when FAQ intent is detected at all). Each is
 documented with its actual triggering condition in `/rules` and
 `lib/rule-status.ts`.
+
+## Fixed accessibility rules (12 of 249, on request)
+
+`/accessibility` and the root layout no longer trigger these — genuinely
+fixed, not faked:
+
+`accessibility.lang_attribute` (root layout `<html lang="en">`),
+`accessibility.keyboard_navigation`, `accessibility.responsive_images`,
+`accessibility.image_alt`, `accessibility.empty_alt`,
+`accessibility.form_label_association`, `accessibility.duplicate_alt`,
+`accessibility.link_accessible_name`, `accessibility.button_accessible_name`,
+`accessibility.duplicate_id`, `accessibility.aria_attribute_validity`,
+`accessibility.aria_role_validity`.
+
+`accessibility.image_filename_quality` was left intentionally broken (not
+requested). `accessibility.color_contrast` is untouched — it always returns
+NOT_APPLICABLE by rule design.
 
 ## Deploy to Vercel
 
