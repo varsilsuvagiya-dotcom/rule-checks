@@ -218,6 +218,12 @@ thead th {
   font-weight: 600;
 }
 
+.rule-detail {
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 30em;
+}
+
 .badge--pass {
   background: #d6f5e0;
   color: #0f6b34;

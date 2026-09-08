@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
 import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from '../components';
 import { RULE_STATUS } from '../../lib/rule-status';
 
@@ -127,7 +126,7 @@ export default function RulesPage() {
                           {STATUS_LABEL[r.status] ?? r.status}
                         </span>
                       </td>
-                      <td style={detailStyle}>{r.how}</td>
+                      <td className="rule-detail">{r.how}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -140,8 +139,3 @@ export default function RulesPage() {
   );
 }
 
-const detailStyle: CSSProperties = {
-  fontSize: '0.85rem',
-  color: 'var(--muted)',
-  maxWidth: 480,
-};

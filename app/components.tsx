@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import { FooterNav, SiteLogo, SiteNav } from "./site-nav";
 
 export const SITE_NAME = "Broken Fixture Co";
 export const SITE_URL = "https://rule-checks.vercel.app";
@@ -50,31 +50,8 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <Link href="/" className="site-logo">
-          Broken Fixture Co
-        </Link>
-        <nav className="site-nav" aria-label="Primary">
-          <ul>
-            <li>
-              <a href="/product">Product</a>
-            </li>
-            <li>
-              <a href="/pricing">Pricing</a>
-            </li>
-            <li>
-              <a href="/hub">Resources</a>
-            </li>
-            <li>
-              <a href="/blog">Blog</a>
-            </li>
-            <li>
-              <a href="/about">About</a>
-            </li>
-            <li>
-              <a href="/contact">Contact</a>
-            </li>
-          </ul>
-        </nav>
+        <SiteLogo />
+        <SiteNav />
       </div>
     </header>
   );
@@ -84,71 +61,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
-        <div>
-          <h2>Product</h2>
-          <ul>
-            <li>
-              <a href="/product">Fixturely overview</a>
-            </li>
-            <li>
-              <a href="/pricing">Pricing</a>
-            </li>
-            <li>
-              <a href="/hub">Resource hub</a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2>Company</h2>
-          <ul>
-            <li>
-              <a href="/about">About us</a>
-            </li>
-            <li>
-              <a href="/blog">Blog</a>
-            </li>
-            <li>
-              <a href="/contact">Contact</a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2>Legal</h2>
-          <ul>
-            <li>
-              <a href="/privacy-policy">Privacy policy</a>
-            </li>
-            <li>
-              <a href="/terms">Terms &amp; conditions</a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2>Reference</h2>
-          <ul>
-            <li>
-              <a href="/rules">Rule compliance report</a>
-            </li>
-            <li>
-              <a
-                href="https://www.w3.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                W3C
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://developers.google.com/search"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Google Search Central
-              </a>
-            </li>
-          </ul>
-        </div>
+        <FooterNav />
       </div>
       <div className="site-footer__bottom">
         <address style={{ fontStyle: "normal", display: "inline" }}>
