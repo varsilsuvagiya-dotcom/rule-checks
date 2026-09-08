@@ -109,19 +109,60 @@ export default function PerformanceFixturePage() {
         <h1>TEST FIXTURE — intentionally broken, not a real business.</h1>
         <p>Broken Fixture Co — performance rule violations fixture page.</p>
 
-        {/* performance.image_optimization + performance.image_bloat: plain <img> tags (no
-            next/image), legacy formats (.jpg/.png/.gif — isLegacyImageFormat true,
-            isModernImageFormat false), no srcset/sizes (hasSrcset false), no width/height (CLS
-            proxy), no loading="lazy", and several missing alt entirely (imagesMissingAlt > 0
-            for image_bloat's untagged-image ratio). Eight large unoptimized images below. */}
-        <img src="https://broken-fixture-co-cdn.example.com/img/hero-full-res.jpg" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/team-photo-uncompressed.png" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/product-banner-1.jpg" alt="" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/product-banner-2.jpg" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/office-photo.gif" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/testimonial-bg.jpg" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/footer-logo-huge.png" />
-        <img src="https://broken-fixture-co-cdn.example.com/img/background-texture.bmp" />
+        {/* performance.image_optimization: still genuinely fails via legacy image formats
+            (.jpg/.png/.gif/.bmp instead of webp/avif) -- format is independent of alt/srcset.
+            accessibility.image_alt / empty_alt / responsive_images: FIXED per user request --
+            every image now has real descriptive alt text and a real srcset/sizes. Accepted side
+            effect (user-confirmed): this also flips performance.image_bloat to PASS, since that
+            rule's only signal is imagesMissingAlt, which is now 0. */}
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/hero-full-res.jpg"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/hero-full-res-800.jpg 800w, https://broken-fixture-co-cdn.example.com/img/hero-full-res-1600.jpg 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Hero image for the Broken Fixture Co performance fixture page"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/team-photo-uncompressed.png"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/team-photo-uncompressed-800.png 800w, https://broken-fixture-co-cdn.example.com/img/team-photo-uncompressed-1600.png 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Team photo used in the performance fixture"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/product-banner-1.jpg"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/product-banner-1-800.jpg 800w, https://broken-fixture-co-cdn.example.com/img/product-banner-1-1600.jpg 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Product banner one"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/product-banner-2.jpg"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/product-banner-2-800.jpg 800w, https://broken-fixture-co-cdn.example.com/img/product-banner-2-1600.jpg 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Product banner two"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/office-photo.gif"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/office-photo-800.gif 800w, https://broken-fixture-co-cdn.example.com/img/office-photo-1600.gif 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Office photo"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/testimonial-bg.jpg"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/testimonial-bg-800.jpg 800w, https://broken-fixture-co-cdn.example.com/img/testimonial-bg-1600.jpg 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Testimonial section background"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/footer-logo-huge.png"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/footer-logo-huge-800.png 800w, https://broken-fixture-co-cdn.example.com/img/footer-logo-huge-1600.png 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Broken Fixture Co footer logo"
+        />
+        <img
+          src="https://broken-fixture-co-cdn.example.com/img/background-texture.bmp"
+          srcSet="https://broken-fixture-co-cdn.example.com/img/background-texture-800.bmp 800w, https://broken-fixture-co-cdn.example.com/img/background-texture-1600.bmp 1600w"
+          sizes="(max-width: 800px) 100vw, 50vw"
+          alt="Decorative background texture"
+        />
 
         {/* performance.link_bloat: >100 total internal+external links on the page ->
             WARNING. 110 generated anchor links below, deeply nested to also pad DOM depth. */}
