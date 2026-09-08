@@ -1,24 +1,13 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../../components";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Responsive Images Without Breaking LCP",
   description:
     "Learn how srcset, sizes, and modern image formats keep pages fast, plus the three mistakes that quietly hurt Largest Contentful Paint the most.",
-  alternates: { canonical: "/blog/responsive-images-guide" },
-  openGraph: {
-    type: "article",
-    title: "Responsive Images Without Breaking LCP",
-    description:
-      "Learn how srcset, sizes, and modern image formats keep pages fast, plus the three mistakes that quietly hurt Largest Contentful Paint the most.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Responsive Images Without Breaking LCP",
-    description:
-      "Learn how srcset, sizes, and modern image formats keep pages fast, plus the three mistakes that quietly hurt Largest Contentful Paint the most.",
-  },
-};
+  path: "/blog/responsive-images-guide",
+  type: "article",
+});
 
 const breadcrumbs = [
   { name: "Home", href: "/" },

@@ -24,6 +24,7 @@ export function pageMetadata({
   type?: "website" | "article";
 }): Metadata {
   const url = `${SITE_URL}${path}`;
+  const ogImage = { url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630, alt: title };
   return {
     title,
     description,
@@ -34,11 +35,13 @@ export function pageMetadata({
       title,
       description,
       url,
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [ogImage.url],
     },
   };
 }

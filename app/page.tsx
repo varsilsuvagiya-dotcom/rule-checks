@@ -1,26 +1,14 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "./components";
+import { SITE_NAME, pageMetadata } from "./components";
 
 const HOME_DESCRIPTION =
   "Try Fixture Scanner to crawl your website and report every technical, on-page, and structured-data issue it finds, with plain-language fixes for each one.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: `Website Auditing Software | ${SITE_NAME}`,
   description: HOME_DESCRIPTION,
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    siteName: SITE_NAME,
-    title: `Website Auditing Software | ${SITE_NAME}`,
-    description: HOME_DESCRIPTION,
-    url: "/",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Website Auditing Software | ${SITE_NAME}`,
-    description: HOME_DESCRIPTION,
-  },
-};
+  path: "/",
+});
 
 const faqs = [
   {

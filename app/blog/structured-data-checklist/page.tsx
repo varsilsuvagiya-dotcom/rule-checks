@@ -1,24 +1,13 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../../components";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Structured Data Checklist That Validates",
   description:
     "Why most JSON-LD implementations fail silently, and a five-step checklist for shipping structured data that matches your page type and validates cleanly.",
-  alternates: { canonical: "/blog/structured-data-checklist" },
-  openGraph: {
-    type: "article",
-    title: "Structured Data Checklist That Validates",
-    description:
-      "Why most JSON-LD implementations fail silently, and a five-step checklist for shipping structured data that matches your page type and validates cleanly.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Structured Data Checklist That Validates",
-    description:
-      "Why most JSON-LD implementations fail silently, and a five-step checklist for shipping structured data that matches your page type and validates cleanly.",
-  },
-};
+  path: "/blog/structured-data-checklist",
+  type: "article",
+});
 
 const breadcrumbs = [
   { name: "Home", href: "/" },
