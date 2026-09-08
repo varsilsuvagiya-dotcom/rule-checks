@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from '../components';
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from '../components';
 import { RULE_STATUS } from '../../lib/rule-status';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Rule Compliance Report',
   description:
     'How Broken Fixture Co scores against all 249 GeoRank AI audit rules, grouped by category, with a documented reason for every non-passing result.',
-  alternates: { canonical: '/rules' },
-};
+  path: '/rules',
+});
 
 const breadcrumbs = [
   { name: 'Home', href: '/' },

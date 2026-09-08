@@ -1,9 +1,47 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 export const SITE_NAME = "Broken Fixture Co";
 export const SITE_URL = "https://rule-checks.vercel.app";
 export const SITE_DESCRIPTION =
   "Broken Fixture Co builds the Fixture Scanner, a site-auditing tool that crawls a website and reports every technical, content, and structured-data issue it finds.";
+
+/**
+ * Consistent title / description / canonical / Open Graph / Twitter Card metadata
+ * for a single page. Every page's metadata export should build off this so the
+ * "Title | Broken Fixture Co" convention, OG tags, and Twitter Card are never
+ * missed on a new route.
+ */
+export function pageMetadata({
+  title,
+  description,
+  path,
+  type = "website",
+}: {
+  title: string;
+  description: string;
+  path: string;
+  type?: "website" | "article";
+}): Metadata {
+  const url = `${SITE_URL}${path}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type,
+      siteName: SITE_NAME,
+      title,
+      description,
+      url,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
 
 export function SiteHeader() {
   return (

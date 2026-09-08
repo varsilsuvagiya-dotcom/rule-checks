@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../components";
 
-export const metadata: Metadata = {
-  title: "Pricing",
+export const metadata: Metadata = pageMetadata({
+  title: "Pricing & Plans",
   description:
     "Compare Fixture Scanner's Starter, Team, and Enterprise plans and start a 14-day free trial today — every tier includes the full website audit rule set.",
-  alternates: { canonical: `${SITE_URL}/pricing` },
-};
+  path: "/pricing",
+});
 
 const crumbs = [
   { name: "Home", href: "/" },

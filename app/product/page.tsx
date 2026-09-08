@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../components";
 
-export const metadata: Metadata = {
-  title: "Product",
+export const metadata: Metadata = pageMetadata({
+  title: "Fixture Scanner Product Overview",
   description:
-    "Fixture Scanner audits your site against hundreds of technical, on-page, and structured-data rules, with plain-language fixes for anything it finds.",
-  alternates: { canonical: `${SITE_URL}/product` },
-};
+    "Try Fixture Scanner to audit your site against hundreds of technical, on-page, and structured-data rules, with plain-language fixes for anything it finds.",
+  path: "/product",
+});
 
 const crumbs = [
   { name: "Home", href: "/" },

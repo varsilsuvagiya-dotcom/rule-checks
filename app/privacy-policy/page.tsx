@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../components";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description:
     "Read how Broken Fixture Co collects, uses, retains, and protects personal data when you use Fixture Scanner or visit this website. Updated September 2026.",
-  alternates: { canonical: `${SITE_URL}/privacy-policy` },
-};
+  path: "/privacy-policy",
+});
 
 const crumbs = [
   { name: "Home", href: "/" },

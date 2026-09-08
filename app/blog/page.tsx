@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../components";
 
-export const metadata: Metadata = {
-  title: "Blog",
+export const metadata: Metadata = pageMetadata({
+  title: "Blog & Technical Guides",
   description:
     "Read guides on technical SEO, accessibility, and site structure from the Broken Fixture Co team, drawn from real audits behind Fixture Scanner's rules.",
-  alternates: { canonical: `${SITE_URL}/blog` },
-};
+  path: "/blog",
+});
 
 const crumbs = [
   { name: "Home", href: "/" },

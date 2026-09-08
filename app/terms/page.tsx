@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, breadcrumbJsonLd, SITE_URL } from "../components";
+import { Breadcrumbs, breadcrumbJsonLd, pageMetadata, SITE_URL } from "../components";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms & Conditions",
   description:
     "Read the terms governing your use of Fixture Scanner and this website, covering accounts, billing, trials, acceptable use, and liability limits.",
-  alternates: { canonical: `${SITE_URL}/terms` },
-};
+  path: "/terms",
+});
 
 const crumbs = [
   { name: "Home", href: "/" },
