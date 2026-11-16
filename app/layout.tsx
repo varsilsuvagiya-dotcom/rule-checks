@@ -35,6 +35,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  // GeoRank / TRAFICA website ownership verification (meta tag method).
+  other: {
+    "trafica-verification": "f405adf546442a503cee9821e37e50a2",
+  },
 };
 
 export const viewport: Viewport = {
