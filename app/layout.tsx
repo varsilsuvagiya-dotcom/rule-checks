@@ -37,7 +37,8 @@ export const metadata: Metadata = {
   },
   // GeoRank / TRAFICA website ownership verification (meta tag method).
   other: {
-    "trafica-verification": "f405adf546442a503cee9821e37e50a2",
+    // rule-checks.vercel.app + test4u.store (same app, two verified websites)
+    "trafica-verification": ["7b3b7db1ffb1cec7c3b4a83551755140", "22bde08ca758dfdb404e8339fa8ad1ed"],
   },
 };
 
